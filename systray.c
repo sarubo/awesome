@@ -372,6 +372,8 @@ luaA_systray(lua_State *L)
         color_t bg_color;
         bool force_redraw = false;
 
+        warn("awesome: systray");
+
         if(color_init_reply(color_init_unchecked(&bg_color, bg, bg_len, globalconf.visual))
                 && globalconf.systray.background_pixel != bg_color.pixel)
         {
@@ -382,6 +384,11 @@ luaA_systray(lua_State *L)
                                          XCB_CW_BACK_PIXEL, config_back);
             xcb_clear_area(globalconf.connection, 1, globalconf.systray.window, 0, 0, 0, 0);
             force_redraw = true;
+            warn("awesome: systray pixel: '%x'", bg_color->pixel);
+            warn("awesome: systray pixel: '%x'", bg_color->red);
+            warn("awesome: systray pixel: '%x'", bg_color->green);
+            warn("awesome: systray pixel: '%x'", bg_color->blue);
+            warn("awesome: systray pixel: '%x'", bg_color->alpha);
         }
 
         if(globalconf.systray.parent != w)

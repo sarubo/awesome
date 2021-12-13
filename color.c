@@ -151,7 +151,7 @@ color_init_unchecked(color_t *color, const char *colstr, ssize_t len, xcb_visual
              * is an ARGB visual and everything unset in some mask is alpha.
              */
             pixel |= apply_mask(alpha, ~(visual->red_mask | visual->blue_mask | visual->green_mask));
-            warn("awesome: color reach");
+            warn("awesome: color reach '%x'", pixel);
         }
         req.color->pixel = pixel;
         req.color->red   = RGB_8TO16(red);
