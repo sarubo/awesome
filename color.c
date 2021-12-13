@@ -189,7 +189,7 @@ color_init_reply(color_init_request_t req)
         req.color->red   = hexa_color->red;
         req.color->green = hexa_color->green;
         req.color->blue  = hexa_color->blue;
-        req.color->alpha = RGB_8TO16(req.color->alpha);
+        req.color->alpha = 0xffff;
         req.color->initialized = true;
         p_delete(&hexa_color);
         return true;
