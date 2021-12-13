@@ -138,17 +138,20 @@ color_init_unchecked(color_t *color, const char *colstr, ssize_t len, xcb_visual
 
     req.colstr = colstr;
     req.has_error = false;
+    warn("awesome: color")
 
     if (visual->_class == XCB_VISUAL_CLASS_TRUE_COLOR || visual->_class == XCB_VISUAL_CLASS_DIRECT_COLOR) {
         uint32_t pixel = 0;
         pixel |= apply_mask(red, visual->red_mask);
         pixel |= apply_mask(blue, visual->blue_mask);
         pixel |= apply_mask(green, visual->green_mask);
+        warn("awesome: color '%x'", pixel)
         if (draw_visual_depth(globalconf.screen, visual->visual_id) == 32) {
             /* This is not actually in the X11 protocol, but we assume that this
              * is an ARGB visual and everything unset in some mask is alpha.
              */
             pixel |= apply_mask(alpha, ~(visual->red_mask | visual->blue_mask | visual->green_mask));
+            warn("awesome: color reach")
         }
         req.color->pixel = pixel;
         req.color->red   = RGB_8TO16(red);
