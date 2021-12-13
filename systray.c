@@ -381,7 +381,8 @@ luaA_systray(lua_State *L)
             globalconf.systray.background_pixel = bg_color.pixel;
             xcb_change_window_attributes(globalconf.connection,
                                          globalconf.systray.window,
-                                         XCB_CW_BACK_PIXEL, config_back);
+                                         XCB_CW_BACK_PIXMAP,  config_back);
+                                         //XCB_CW_BACK_PIXEL, config_back);
             xcb_clear_area(globalconf.connection, 1, globalconf.systray.window, 0, 0, 0, 0);
             force_redraw = true;
             warn("awesome: systray pixel: '%x'", bg_color.pixel);
