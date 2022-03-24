@@ -373,30 +373,37 @@ luaA_systray(lua_State *L)
         bool force_redraw = false;
 
         warn("awesome: systray");
+        warn("%s", bg);
 
-        if(color_init_reply(color_init_unchecked(&bg_color, bg, bg_len, globalconf.visual))
+        //if(color_init_reply(color_init_unchecked(&bg_color, bg, bg_len, globalconf.visual))
+        if(color_init_reply(color_init_unchecked(&bg_color, bg, bg_len, globalconf.default_visual))
                 && globalconf.systray.background_pixel != bg_color.pixel)
         {
+            warn("luaA_systray globalconf.systray.background_pixel: '%x'", globalconf.systray.background_pixel);
             uint32_t config_back[] = { bg_color.pixel };
             globalconf.systray.background_pixel = bg_color.pixel;
             xcb_change_window_attributes(globalconf.connection,
                                          globalconf.systray.window,
-                                         XCB_CW_BACK_PIXMAP,  config_back);
-                                         //XCB_CW_BACK_PIXEL, config_back);
+                                         XCB_CW_BACK_PIXEL, config_back);
             xcb_clear_area(globalconf.connection, 1, globalconf.systray.window, 0, 0, 0, 0);
             force_redraw = true;
-            warn("awesome: systray pixel: '%x'", bg_color.pixel);
-            warn("awesome: systray pixel: '%x'", bg_color.red);
-            warn("awesome: systray pixel: '%x'", bg_color.green);
-            warn("awesome: systray pixel: '%x'", bg_color.blue);
-            warn("awesome: systray pixel: '%x'", bg_color.alpha);
+            warn("luaA_systray bg_color.pixel: '%x'", bg_color.pixel);
+            warn("luaA_systray bg_color.red  : '%x'", bg_color.red);
+            warn("luaA_systray bg_color.green: '%x'", bg_color.green);
+            warn("luaA_systray bg_color.blue : '%x'", bg_color.blue);
+            warn("luaA_systray bg_color.alpha: '%x'", bg_color.alpha);
         }
 
         if(globalconf.systray.parent != w)
+        {
             xcb_reparent_window(globalconf.connection,
                                 globalconf.systray.window,
                                 w->window,
                                 x, y);
+            if (globalconf.systray.background_pixel == bg_color.pixel) {
+                warn("luaA_systray bg_color.pixel: '%x' COME HERE IF", bg_color.pixel);
+            }
+        }
         else
         {
             uint32_t config_vals[2] = { x, y };
@@ -404,6 +411,9 @@ luaA_systray(lua_State *L)
                                  globalconf.systray.window,
                                  XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y,
                                  config_vals);
+            if (globalconf.systray.background_pixel == bg_color.pixel) {
+                warn("luaA_systray bg_color.pixel: '%x' COME HERE ELSE", bg_color.pixel);
+            }
         }
 
         globalconf.systray.parent = w;
@@ -413,6 +423,9 @@ luaA_systray(lua_State *L)
             systray_update(base_size, horiz, revers, spacing, force_redraw, rows);
             xcb_map_window(globalconf.connection,
                            globalconf.systray.window);
+            if (globalconf.systray.background_pixel == bg_color.pixel) {
+                warn("luaA_systray bg_color.pixel: '%x' COME HERE systray_num_visible_entries() != 0", bg_color.pixel);
+            }
         }
     }
 

@@ -146,7 +146,19 @@ color_init_unchecked(color_t *color, const char *colstr, ssize_t len, xcb_visual
         pixel |= apply_mask(blue, visual->blue_mask);
         pixel |= apply_mask(green, visual->green_mask);
         warn("awesome: color '%x'", pixel);
-        if (draw_visual_depth(globalconf.screen, visual->visual_id) == 32) {
+        // windowのボーダーはvisual_id==80なのでdepth==32で透過に成功した。
+        // しかしsystrayはvisual_id==33でdepth==24の指定があり、透過できない。
+        if (visual->visual_id == 33)
+        {
+            // ここで80に指定してもdepth==24になってしまった。
+            // https://github.com/awesomeWM/awesome/pull/2207
+            // ここにsystrayは無理と書いてある。これで終わり。
+            visual->visual_id = 80;
+        }
+        uint8_t depth = draw_visual_depth(globalconf.screen, visual->visual_id );
+        warn("depth: %u", depth);
+        //if (draw_visual_depth(globalconf.screen, visual->visual_id) == 32) {
+        if (depth == 32) {
             /* This is not actually in the X11 protocol, but we assume that this
              * is an ARGB visual and everything unset in some mask is alpha.
              */

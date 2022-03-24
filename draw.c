@@ -233,8 +233,11 @@ uint8_t draw_visual_depth(const xcb_screen_t *s, xcb_visualid_t vis)
         for(; depth_iter.rem; xcb_depth_next (&depth_iter))
             for(xcb_visualtype_iterator_t visual_iter = xcb_depth_visuals_iterator(depth_iter.data);
                 visual_iter.rem; xcb_visualtype_next (&visual_iter))
+            {
+                //warn("&vis, visual_iter.data.visual_id, depth_iter.data.depth %u, %u, %u", vis, visual_iter.data->visual_id, depth_iter.data->depth);
                 if(vis == visual_iter.data->visual_id)
                     return depth_iter.data->depth;
+            }
 
     fatal("Could not find a visual's depth");
 }
